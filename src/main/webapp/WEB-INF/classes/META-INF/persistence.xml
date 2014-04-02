@@ -58,9 +58,9 @@
 		<class>org.apache.openmeetings.db.entity.room.RoomModerator</class>
 		<class>org.apache.openmeetings.db.entity.room.Room</class>
 		<class>org.apache.openmeetings.db.entity.room.RoomType</class>
+		<class>org.apache.openmeetings.db.entity.room.RoomOrganisation</class>
 		<class>org.apache.openmeetings.db.entity.room.Whiteboard</class>
 		<class>org.apache.openmeetings.db.entity.room.WhiteboardItem</class>
-		<class>org.apache.openmeetings.db.entity.room.RoomOrganisation</class>
 		<class>org.apache.openmeetings.db.entity.user.Address</class>
 		<class>org.apache.openmeetings.db.entity.user.State</class>
 		<class>org.apache.openmeetings.db.entity.user.PrivateMessage</class>
@@ -78,19 +78,18 @@
 			<property name="openjpa.RuntimeUnenhancedClasses" value="unsupported" />
 			<property name="openjpa.ConnectionDriverName" value="org.apache.commons.dbcp.BasicDataSource" />
 			<property name="openjpa.ConnectionProperties"
-				value="DriverClassName=com.mysql.jdbc.Driver
-					, Url=jdbc:mysql://localhost:3306/openmeetings?autoReconnect=true&amp;useUnicode=true&amp;createDatabaseIfNotExist=true&amp;characterEncoding=utf-8&amp;connectionCollation=utf8_general_ci&amp;cachePrepStmts=true&amp;cacheCallableStatements=true&amp;cacheServerConfiguration=true&amp;useLocalSessionState=true&amp;elideSetAutoCommits=true&amp;alwaysSendSetIsolation=false&amp;enableQueryTimeouts=false&amp;prepStmtCacheSize=3000&amp;prepStmtCacheSqlLimit=1000
-					, MaxActive=100
-					, MaxWait=10000
-					, TestOnBorrow=true
-					, poolPreparedStatements=true
-					, Username=root
-					, Password=" />
+				value="DriverClassName=org.apache.derby.jdbc.ClientDriver,
+                                  Url=jdbc:derby:openmeetings;create=true, 
+                                  create=true,
+                                  MaxActive=100, 
+                                  MaxWait=10000, 
+                                  TestOnBorrow=true, 
+                                  Username=user, 
+                                  Password=secret" />
 			<property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema" />
-			<property name="openjpa.Log" value="DefaultLevel=WARN, Runtime=INFO" />
+			<property name="openjpa.Log" value="DefaultLevel=WARN, Tool=INFO" />
 			<property name="openjpa.DataCache" value="true" />
-			<!-- QueryCache disabled due to changes outside of JPA doesn't take effect with caching -->
-			<property name="openjpa.QueryCache" value="false" />
+			<property name="openjpa.QueryCache" value="true" />
 			<property name="openjpa.jdbc.DBDictionary" value="batchLimit=100" />
 			<property name="openjpa.jdbc.QuerySQLCache" value="false" />
 		</properties>

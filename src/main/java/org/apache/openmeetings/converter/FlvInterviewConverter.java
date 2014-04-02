@@ -115,8 +115,9 @@ public class FlvInterviewConverter extends BaseConverter {
 	}
 
 	public void startConversion(Long flvRecordingId, boolean reconversion, ReConverterParams rcv) {
+		FlvRecording flvRecording = null;
 		try {
-			FlvRecording flvRecording = recordingDao.get(flvRecordingId);
+			flvRecording = recordingDao.get(flvRecordingId);
 			log.debug("flvRecording " + flvRecording.getFlvRecordingId());
 
 			List<ConverterProcessResult> returnLog = new ArrayList<ConverterProcessResult>();
@@ -279,8 +280,9 @@ public class FlvInterviewConverter extends BaseConverter {
 
 			flvRecording.setAlternateDownload(alternateDownloadName);
 
-			recordingDao.update(flvRecording);
+			updateDuration(flvRecording);
 			convertToMp4(flvRecording, returnLog);
+			flvRecording.setStatus(FlvRecording.Status.PROCESSED);
 
 			logDao.deleteByRecordingId(flvRecording.getFlvRecordingId());
 
@@ -297,7 +299,9 @@ public class FlvInterviewConverter extends BaseConverter {
 			}
 		} catch (Exception err) {
 			log.error("[startConversion]", err);
+			flvRecording.setStatus(FlvRecording.Status.ERROR);
 		}
+		recordingDao.update(flvRecording);
 	}
 
 	public ConverterProcessResult processImageWindows(String file1, String file2, String file3) {

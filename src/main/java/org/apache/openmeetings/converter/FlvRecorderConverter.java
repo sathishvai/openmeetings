@@ -23,10 +23,8 @@ import static org.apache.openmeetings.util.OpenmeetingsVariables.webAppRootKey;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.openmeetings.db.dao.record.FlvRecordingDao;
 import org.apache.openmeetings.db.dao.record.FlvRecordingLogDao;
@@ -55,40 +53,19 @@ public class FlvRecorderConverter extends BaseConverter {
 	private String FFMPEG_MAP_PARAM = ":";
 
 	public void startConversion(Long flvRecordingId) {
+		FlvRecording flvRecording = null;
 		try {
 			if (isUseOldStyleFfmpegMap()) {
 				FFMPEG_MAP_PARAM = ".";
 			}
 
-			FlvRecording flvRecording = recordingDao.get(flvRecordingId);
+			flvRecording = recordingDao.get(flvRecordingId);
 			log.debug("flvRecording " + flvRecording.getFlvRecordingId());
 
-			// Strip Audio out of all Audio-FLVs
-			stripAudioFromFLVs(flvRecording);
-
-			// Add empty pieces at the beginning and end of the wav
-
-		} catch (Exception err) {
-			log.error("[startConversion]", err);
-		}
-	}
-
-	private String getDifference(Date from, Date to) {
-		long millis = from.getTime() - to.getTime();
-		long hours = TimeUnit.MILLISECONDS.toHours(millis);
-		millis -= TimeUnit.HOURS.toMillis(hours);
-		long minutes = TimeUnit.MILLISECONDS.toMinutes(millis);
-		millis -= TimeUnit.MINUTES.toMillis(minutes);
-		long seconds = TimeUnit.MILLISECONDS.toSeconds(millis);
-		millis -= TimeUnit.SECONDS.toMillis(seconds);
-		return String.format("%02d:%02d:%02d.%03d", hours, minutes, seconds, millis);
-	}
-	
-	public void stripAudioFromFLVs(FlvRecording flvRecording) {
-		List<ConverterProcessResult> returnLog = new ArrayList<ConverterProcessResult>();
-		List<String> listOfFullWaveFiles = new LinkedList<String>();
-		File streamFolder = getStreamFolder(flvRecording);
-		try {
+			List<ConverterProcessResult> returnLog = new ArrayList<ConverterProcessResult>();
+			List<String> listOfFullWaveFiles = new LinkedList<String>();
+			File streamFolder = getStreamFolder(flvRecording);
+			
 			FlvRecordingMetaData screenMetaData = metaDataDao.getScreenMetaDataByRecording(flvRecording.getFlvRecordingId());
 
 			if (screenMetaData == null) {
@@ -203,8 +180,9 @@ public class FlvRecorderConverter extends BaseConverter {
 
 			flvRecording.setAlternateDownload(alternateDownloadName);
 
-			recordingDao.update(flvRecording);
+			updateDuration(flvRecording);
 			convertToMp4(flvRecording, returnLog);
+			flvRecording.setStatus(FlvRecording.Status.PROCESSED);
 
 			for (ConverterProcessResult returnMap : returnLog) {
 				logDao.addFLVRecordingLog("generateFFMPEG", flvRecording, returnMap);
@@ -219,8 +197,9 @@ public class FlvRecorderConverter extends BaseConverter {
 			}
 
 		} catch (Exception err) {
-			log.error("[stripAudioFromFLVs]", err);
+			log.error("[startConversion]", err);
+			flvRecording.setStatus(FlvRecording.Status.ERROR);
 		}
+		recordingDao.update(flvRecording);
 	}
-
 }

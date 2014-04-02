@@ -18,7 +18,6 @@
  */
 package org.apache.openmeetings.web.util;
 
-import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 import static org.apache.openmeetings.web.app.Application.getBean;
 import static org.apache.openmeetings.web.app.WebSession.getUserId;
 
@@ -76,11 +75,6 @@ public class UserChoiceProvider extends ChoiceProvider<User> {
 		}
 		return u;
 	}
-	
-	protected String getDisplayText(User u) {
-		// TODO check RIGHTS here (email might need to be hidden)
-		return u == null ? "" : escapeHtml4(String.format("\"%s %s\" <%s>", u.getFirstname(), u.getLastname(), u.getAdresses().getEmail()));
-	}
 
 	protected Object getId(User u) {
 		String id = "" + u.getUser_id();
@@ -119,7 +113,7 @@ public class UserChoiceProvider extends ChoiceProvider<User> {
     public void toJson(User choice, JSONWriter writer) throws JSONException {
     	writer
     		.key("id").value(getId(choice))
-    		.key("text").value(getDisplayText(choice))
+    		.key("text").value(FormatHelper.formatUser(choice, true))
     		.key("contact").value(choice.getType() == Type.contact);
     };
 }

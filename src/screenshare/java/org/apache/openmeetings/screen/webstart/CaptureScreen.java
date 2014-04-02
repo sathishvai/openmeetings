@@ -110,7 +110,7 @@ final class CaptureScreen extends Thread {
 							log.trace(String.format("Image was encoded in %s ms", System.currentTimeMillis() - start));
 						}
 						frames.offer(data);
-						se.createUnalteredFrame(screen);
+						se.createUnalteredFrame();
 					} catch (IOException e) {
 						log.error("Error while encoding: ", e);
 					}
@@ -123,7 +123,7 @@ final class CaptureScreen extends Thread {
 					if (f != null) {
 						try {
 							timestamp += timeBetweenFrames;
-							pushVideo(f, (int)timestamp);
+							pushVideo(f, timestamp);
 							if (log.isTraceEnabled()) {
 								log.trace("Sending video, timestamp: " + timestamp);
 							}

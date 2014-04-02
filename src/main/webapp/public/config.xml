@@ -84,7 +84,7 @@ of the red5-servlet
     Name of the Application
     this is the Top-Icon Name of the Application
  -->    
-<currentappname>Apache OpenMeetings</currentappname>    
+<currentappname>RSalesArm IT Service Pvt Ltd</currentappname>    
     
 <!-- 
     URL to the Home of the Application
@@ -104,7 +104,7 @@ of the red5-servlet
     URL to Bugs/Support
     this is the URL which is used if you click on *report a bug*
  -->
-<currentappnamebugurl>https://issues.apache.org/jira/browse/OPENMEETINGS</currentappnamebugurl>   
+<currentappnamebugurl></currentappnamebugurl>   
         
 <!--
     Video-Settings
@@ -126,7 +126,7 @@ of the red5-servlet
     red5-web.properties
     web.xml
  -->
-<webAppRootKey>openmeetings</webAppRootKey>  
+<webAppRootKey>roycemeet</webAppRootKey>  
 
 <!--
     We need this additional ROOT-Key as we have to deploy the application 
@@ -136,7 +136,7 @@ of the red5-servlet
     we might change this value again to its origin / webapp-context
 
  -->
-<httpRootKey>/openmeetings/</httpRootKey>  
+<httpRootKey>/roycemeet/</httpRootKey>  
     
 <!--
     Window-Effect Settings
